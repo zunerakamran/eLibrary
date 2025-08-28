@@ -17,5 +17,5 @@ export async function middleware(req:NextRequest){
 }
 
 export const config = {
-  matcher: ["/add-book", "/my-books", "/update"],
+  matcher: ["/add-book", "/my-books", "/update", "/pending-books"],
 };
