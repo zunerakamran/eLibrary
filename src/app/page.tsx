@@ -1,103 +1,190 @@
-import Image from "next/image";
 
-export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+ export default function Home() {
+  return(
+     <>
+         <div className="hero-container my-6">
+             <div className="hero-section-container">
+                 <h1 className="hero-section-heading">
+                     Discover Your Next Great Read with Expert Curation
+                 </h1>
+                 <p className="my-6 hero-section-text">
+                     At Naredko, we build professional digital platforms for book lovers and researchers, making it easy to explore, access, and enjoy a world of knowledge at your fingertips.
+                 </p>
+                 <a href="#homeContainer" className="library-button">Explore Now</a>
+             </div>
+         </div>
+         <div className="container mx-auto px-4" id="homeContainer">
+             {/* <!-- category section --> */}
+             <h1 className="library-heading text-center mt-6">
+                 Discover a world of knowledge
+             </h1>
+            
+             <div className="flex flex-wrap -mx-4 pb-3">
+                 <div className="w-full sm:w-1/2 md:w-1/2 lg:w-1/4 px-4 mt-3">
+                     <a href="/categories/fiction" className="gallery-clickable-content">
+                         <div className="gallery-container fiction-container">
+                             <div className="gallery-black-small-box-subcontainer px-4 py-2">
+                                 <div className="icon-container ">
+                                     <div className="icon-heading">
+                                         <h1 className="gallery-heading">Fiction</h1>
+                                     </div>
+                                     <div className="icon-subcontainer">
+                                         <img src="images/arrow.png" alt=""/>
+                                     </div>
+                                 </div>
+                                 <div className="mt-1">
+                                     <p className="gallery-text">Books Available: 250+</p>
+                                 </div>
+                             </div>    
+                         </div>
+                     </a>
+                 </div>
+                 <div className="w-full sm:w-1/2 md:w-1/2 lg:w-1/4 px-4 mt-3">
+                     <a href="/categories/children" className="gallery-clickable-content">
+                         <div className="gallery-container children-container">
+                             <div className="gallery-black-small-box-subcontainer px-4 py-2">
+                                 <div className="icon-container ">
+                                     <div className="icon-heading">
+                                         <h1 className="gallery-heading">Children</h1>
+                                     </div>
+                                     <div className="icon-subcontainer">
+                                         <img src="images/arrow.png" alt=""/>
+                                     </div>
+                                 </div>
+                                 <div className="mt-1">
+                                     <p className="gallery-text">Books Available: 180+</p>
+                                 </div>
+                             </div>
+                         </div>
+                     </a>
+                 </div>
+                 <div className="w-full sm:w-1/2 md:w-1/2 lg:w-1/2 px-4 mt-3">
+                     <a href="/categories/history" className="gallery-clickable-content">
+                         <div className="gallery-container history-container">
+                             <div className="gallery-black-large-box-subcontainer px-4 py-2">
+                                 <div className="icon-container ">
+                                     <div className="icon-heading">
+                                         <h1 className="gallery-heading">History</h1>
+                                     </div>
+                                     <div className="icon-subcontainer">
+                                         <img src="images/arrow.png" alt=""/>
+                                     </div>
+                                 </div>
+                                 <div className="mt-1">
+                                     <p className="gallery-text">Books Available : 145+</p>
+                                 </div>
+                             </div>
+                         </div>
+                     </a>
+                 </div>
+                 <div className="w-full sm:w-1/2 md:w-1/2 lg:w-1/2 px-4 mt-3">
+                     <a href="/categories/all" className="gallery-clickable-content">
+                         <div className="gallery-container all-container">
+                             <div className="gallery-black-large-box-subcontainer px-4 py-2">
+                                 <div className="icon-container ">
+                                     <div className="icon-heading">
+                                         <h1 className="gallery-heading">All </h1>
+                                     </div>
+                                     <div className="icon-subcontainer">
+                                         <img src="images/arrow.png" alt=""/>
+                                     </div>
+                                 </div>
+                                 <div className="mt-1">
+                                     <p className="gallery-text">Books Available : 200+</p>
+                                 </div>
+                             </div>
+                         </div>
+                     </a>
+                 </div>
+                 <div className="w-full sm:w-1/2 md:w-1/2 lg:w-1/4 px-4 mt-3">
+                     <a href="/categories/biography" className="gallery-clickable-content">
+                         <div className="gallery-container biography-container">
+                             <div className="gallery-black-small-box-subcontainer px-4 py-2">
+                                 <div className="icon-container ">
+                                     <div className="icon-heading">
+                                         <h1 className="gallery-heading">Biography </h1>
+                                     </div>
+                                     <div className="icon-subcontainer">
+                                         <img src="images/arrow.png" alt=""/>
+                                     </div>
+                                 </div>
+                                 <div className="mt-1">
+                                     <p className="gallery-text">Books Available : 125+</p>
+                                 </div>
+                             </div>
+                         </div>
+                     </a>
+                 </div>
+                 <div className="w-full sm:w-1/2 md:w-1/2 lg:w-1/4 px-4 mt-3">
+                     <a href="/categories/arts" className="gallery-clickable-content">
+                         <div className="gallery-container art-container">
+                             <div className="gallery-black-small-box-subcontainer px-4 py-2">
+                                 <div className="icon-container ">
+                                     <div className="icon-heading">
+                                         <h1 className="gallery-heading">Arts</h1>
+                                     </div>
+                                     <div className="icon-subcontainer">
+                                         <img src="images/arrow.png" alt=""/>
+                                     </div>
+                                 </div>
+                                 <div className="mt-1">
+                                     <p className="gallery-text">Books Available : 230+</p>
+                                 </div>
+                             </div>
+                         </div>
+                     </a>
+                 </div>
+             </div>
+
+             {/* <!-- why choose us? section --> */}
+             <h1 className="library-heading text-center mt-5 mb-3">Why Choose Our Library?</h1>
+             <div className="flex flex-wrap -mx-4">
+                 <div className="w-full sm:w-full md:w-full lg:w-5/12 px-4 pb-3">
+                     <img src="/images/my-books.jpg" alt="" className="section3-images"/>
+                 </div>
+
+                 <div className="w-full sm:w-full md:w-full lg:w-7/12 px-4 pb-3">
+                     <div className="flex flex-wrap -mx-4">
+                         <div className="w-full sm:w-full md:w-full lg:w-6/12 px-4 my-3">
+                             <div className="section-boxes">
+                                 <h1 className="library-subheading">Expertise and Knowledge</h1>
+                                 <p className="library-text">Offers a curated collection of quality books, categorized and organized for easy discovery by genre, author, or popularity.</p>
+                             </div>
+                         </div>
+                         <div className="w-full sm:w-full md:w-full lg:w-6/12 px-4 my-3">
+                             <div className="section-boxes">
+                                 <h1 className="library-subheading">
+                                     Time and Stress Savings</h1>
+                                 <p className="library-text">
+                                     Simplifies your reading journey with smart search, filters, and personalized recommendations—no more endless browsing.
+                                 </p>
+                             </div>
+                         </div>
+                         <div className="w-full sm:w-full md:w-full lg:w-6/12 px-4 my-3">
+                             <div className="section-boxes">
+                                 <h1 className="library-subheading">
+                                     Community and Contribution
+                                 </h1>
+                                 <p className="library-text">
+                                     Allows readers to submit books and share knowledge, while admins ensure every submission is verified and appropriate.
+                                 </p>
+                             </div>
+                         </div>
+                         <div className="w-full sm:w-full md:w-full lg:w-6/12 px-4 my-3">
+                             <div className="section-orange-boxes">
+                                 <h1 className="library-subheading">
+                                     Access Anytime, Anywhere
+                                 </h1>
+                                 <p className="library-text">
+                                     Enjoy unlimited access to books—whether at home, school, or on the go—on any device, 24/7.
+                                 </p>
+                             </div>
+                         </div>
+                     </div>
+                 </div>
+             </div>
+         </div>
+    </>
   );
 }
