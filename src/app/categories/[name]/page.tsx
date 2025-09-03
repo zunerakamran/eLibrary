@@ -23,11 +23,10 @@ export default function Categories() {
     const category = params.name as string;
     const categories = ["fiction", "children", "history", "biography", "arts", "all"];
     const [books, setBooks] = useState<Book[]>([]);
-    if (!categories.includes(category.toLowerCase())) {
-        return notFound("This category does not exists")
-    }
+    const isValidCategory = categories.includes(category.toLowerCase());
 
     useEffect(() => {
+        if (!isValidCategory) return;
         const loadBooks = async () => {
             const res = await fetch('/api/books');
             const data: Book[] = await res.json();
@@ -43,8 +42,11 @@ export default function Categories() {
         if (category) { 
             loadBooks();
         }
-    }, [category]);
-
+    }, [category,isValidCategory]);
+    
+    if (!isValidCategory) {
+        return notFound("This category does not exists");
+    }
 
     return (
         <>
