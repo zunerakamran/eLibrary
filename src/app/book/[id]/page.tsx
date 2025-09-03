@@ -33,7 +33,7 @@ export default function Book() {
         <>
             <div className="container mx-auto p-10">
                 {books.map(book => (
-                    <div className="flex flex-wrap -mx-4 mb-4">
+                    <div key={book.id} className="flex flex-wrap -mx-4 mb-4">
                         <div key={book.id} className="w-full sm:w-full md:w-1/2 lg:w-1/3 py-3">
                             <Image
                                 src={book.image.startsWith("/") ? book.image : `/${book.image}`}

@@ -81,7 +81,7 @@ export default function MyBooks() {
                     {books.length === 0 && notFound("No books available")}
                     <div className="flex flex-wrap justify-center">
                         {books.map(book => (
-                            <div className="w-1/2 sm:w-1/2 md:w-1/3 lg:w-1/6 m-5 book-card">
+                            <div key={book.id} className="w-1/2 sm:w-1/2 md:w-1/3 lg:w-1/6 m-5 book-card">
                                 <div className='max-w-sm mx-auto'>
                                     <div className="bg-white shadow-lg rounded-2xl overflow-hidden hover:shadow-xl transition-shadow">
                                         <Image
