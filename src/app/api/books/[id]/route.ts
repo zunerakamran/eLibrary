@@ -12,7 +12,7 @@ interface RouterContext{
     }
 }
 
-export async function GET(req: NextRequest, { params }: RouterContext) {
+export async function GET({ params }: RouterContext) {
     const id = Number(params.id)
     if (Number.isNaN(id)) {
         return NextResponse.json(
@@ -36,7 +36,7 @@ export async function GET(req: NextRequest, { params }: RouterContext) {
     }
 }
 
-export async function DELETE(req: NextRequest, { params }: RouterContext) {
+export async function DELETE(req: NextRequest, { params }: {params:{id:string}}) {
     const id = Number(params.id)
     if (Number.isNaN(id)) {
         return NextResponse.json(
