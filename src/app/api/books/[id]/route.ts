@@ -6,8 +6,13 @@ import path from 'path';
 import fs from "fs/promises";
 
 const prisma = new PrismaClient();
+interface RouterContext{
+    params:{
+        id: string
+    }
+}
 
-export async function GET(req: NextRequest, { params }: any) {
+export async function GET(req: NextRequest, { params }: RouterContext) {
     const id = Number(params.id)
     if (Number.isNaN(id)) {
         return NextResponse.json(
@@ -31,7 +36,7 @@ export async function GET(req: NextRequest, { params }: any) {
     }
 }
 
-export async function DELETE(req: NextRequest, { params }: any) {
+export async function DELETE(req: NextRequest, { params }: RouterContext) {
     const id = Number(params.id)
     if (Number.isNaN(id)) {
         return NextResponse.json(
@@ -70,7 +75,7 @@ export async function DELETE(req: NextRequest, { params }: any) {
     }
 }
 
-export async function PATCH(req: NextRequest, { params }: any) {
+export async function PATCH(req: NextRequest, { params }: RouterContext) {
     const id = Number(params.id)
     if (Number.isNaN(id)) {
         return NextResponse.json(
