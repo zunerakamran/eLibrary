@@ -7,8 +7,8 @@ import fs from "fs/promises";
 
 const prisma = new PrismaClient();
 
-export async function GET(req: NextRequest, context : { params: { id: string } }) {
-    const id = Number(context.params.id)
+export async function GET(req: NextRequest, { params }: any) {
+    const id = Number(params.id)
     if (Number.isNaN(id)) {
         return NextResponse.json(
             { error: "Book id must be a valid number" },
@@ -31,8 +31,8 @@ export async function GET(req: NextRequest, context : { params: { id: string } }
     }
 }
 
-export async function DELETE(req: NextRequest, context: { params: { id: string } }) {
-    const id = Number(context.params.id)
+export async function DELETE(req: NextRequest, { params }: any) {
+    const id = Number(params.id)
     if (Number.isNaN(id)) {
         return NextResponse.json(
             { error: "Book id must be a valid number" },
@@ -70,8 +70,8 @@ export async function DELETE(req: NextRequest, context: { params: { id: string }
     }
 }
 
-export async function PATCH(req: NextRequest, context: { params: { id: string } }) {
-    const id = Number(context.params.id)
+export async function PATCH(req: NextRequest, { params }: any) {
+    const id = Number(params.id)
     if (Number.isNaN(id)) {
         return NextResponse.json(
             { error: "Book id must be a valid number" },
