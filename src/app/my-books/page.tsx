@@ -41,7 +41,7 @@ export default function MyBooks() {
 
     useEffect(() => {
         fetchBooks()
-    }, [user])
+    }, [user, fetchBooks])
 
     const viewBook = (id: number) => {
         router.push(`/book/${id}`)

@@ -49,7 +49,7 @@ export default function PendingBooks() {
     }
     useEffect(() => {
         fetchBooks();
-    }, [user])
+    }, [user, fetchBooks])
 
     const viewBook = (id: number) => {
         router.push(`/book/${id}`)
