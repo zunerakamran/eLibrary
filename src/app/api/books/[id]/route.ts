@@ -9,8 +9,11 @@ const prisma = new PrismaClient();
 
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
     const id = Number(params.id)
-    if (!id) {
-        return NextResponse.json({ error: "Book id is required", status: 404 })
+    if (Number.isNaN(id)) {
+        return NextResponse.json(
+            { error: "Book id must be a valid number" },
+            { status: 400 }
+        );
     }
     try {
         const book = await prisma.book.findFirst({
@@ -29,9 +32,12 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
 }
 
 export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
-    const { id } = await params
-    if (!id) {
-        return NextResponse.json({ error: "Book id is required", status: 404 })
+    const id = Number(params.id)
+    if (Number.isNaN(id)) {
+        return NextResponse.json(
+            { error: "Book id must be a valid number" },
+            { status: 400 }
+        );
     }
     try {
         const token = req.cookies.get("token")?.value
@@ -65,9 +71,12 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
 }
 
 export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
-    const id = await Number(params.id);
-    if (!id) {
-        return NextResponse.json({ error: "Book Id is required", status: 404 })
+    const id = Number(params.id)
+    if (Number.isNaN(id)) {
+        return NextResponse.json(
+            { error: "Book id must be a valid number" },
+            { status: 400 }
+        );
     }
     const token = req.cookies.get("token")?.value
     if (!token) {
