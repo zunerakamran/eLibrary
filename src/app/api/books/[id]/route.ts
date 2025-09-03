@@ -69,6 +69,12 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
     if (!id) {
         return NextResponse.json({ error: "Book Id is required", status: 404 })
     }
+    let token = req.cookies.get("token")?.value
+    if (!token) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 404 })
+    }
+
+    const user = jwt.verify(token, process.env.JWT_SECRET!) as { id: number, username: string }
     try {
         const book = await prisma.book.findFirst({
             where: {
@@ -101,6 +107,13 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
         await writeFile(filePath, buffer);
         const imagePath = imageName
 
+        let isVerified = false
+        if (user.username === "superAdmin" && user.id === 1) {
+            isVerified= true
+        }
+        else{
+            isVerified=false
+        }
 
         const updateBook = await prisma.book.update({
             where: { id },
@@ -113,6 +126,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
                 publishedAt: new Date(publishedAtString), // Ensure this is a Date if it's a Date field
                 details,
                 category,
+                isVerified: isVerified
             },
         });
         return NextResponse.json({ msg: "Update book successful", updateBook })

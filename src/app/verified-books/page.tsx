@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import notFound from './error';
+import notFound from './error'
 interface Book {
     id: number;
     title: string;
@@ -21,7 +21,6 @@ export default function PendingBooks() {
     const router = useRouter()
     const [user, setUser] = useState<{ id: number; username: string } | null>(null);
     const [books, setBooks] = useState<Book[]>([])
-    const [verifyBtn, setVerifyBtn] = useState(false)
     useEffect(() => {
         async function fetchUser() {
             const res = await fetch('/api/cookies', { credentials: 'include' });
@@ -35,16 +34,8 @@ export default function PendingBooks() {
     const fetchBooks = async () => {
         const res = await fetch('/api/books')
         const data: Book[] = await res.json()
-        let filterBooks;
-        if (user?.username === "superAdmin" && user.id === 1) {
-            filterBooks = data.filter(book => book.isVerified === false)
-            setVerifyBtn(true)
-        }
-        else {
-            filterBooks = data.filter(book => book.userId === user?.id)
-            filterBooks = filterBooks.filter(book => book.isVerified === false)
-            setVerifyBtn(false)
-        }
+        let filterBooks = data.filter(book => book.isVerified === true)
+        filterBooks = filterBooks.filter(book => book.userId !== user?.id)
         setBooks(filterBooks)
     }
     useEffect(() => {
@@ -70,24 +61,13 @@ export default function PendingBooks() {
         router.push(`/update/${id}`)
     }
 
-    const verifyBook = async (id: number) => {
-        const res = await fetch(`/api/verify/${id}`, {
-            method: "PATCH"
-        })
-        const data = await res.json()
-        if (res.ok) {
-            await fetchBooks()
-        }
-        notFound(data.error)
-    }
-
     return (
         <>
             <div className="w-full mt-3">
-                <div className="pendingbooks-container">
+                <div className="verifiedbooks-container">
                     <div className="hero-section-container">
                         <h1 className="hero-section-heading mt-3 text-capitalize">
-                            Pending Books
+                            Verified Books
                         </h1>
                         <p className="hero-section-text mt-3">
                             Discover a world of knowledge, imagination, and inspiration. Browse through our diverse range of categories—each carefully curated to fuel your curiosity and ignite your passion for reading.
@@ -115,8 +95,9 @@ export default function PendingBooks() {
                                     <Image
                                         src={book.image}
                                         alt="Book Cover"
-                                        fill
-                                        className="object-cover transition-transform duration-500 group-hover:scale-110"
+                                        width={400}
+                                        height={600}
+                                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                                     />
                                     <span className="absolute top-3 left-3 bg-gradient-to-r from-yellow-500 to-orange-500 text-white text-xs font-semibold px-3 py-1 rounded-full shadow">
                                         {book.category}
@@ -159,13 +140,6 @@ export default function PendingBooks() {
                                     >
                                         ✏️
                                     </button>
-                                    <button
-                                        onClick={() => verifyBook(book.id)}
-                                        className={verifyBtn ? "bg-green-500 hover:bg-green-600 text-white p-3 rounded-full shadow-lg transition transform hover:scale-110" : "hidden"}
-                                        title="Verify"
-                                    >
-                                        ✅
-                                    </button>
                                 </div>
 
                                 {/* Actions for Mobile (always visible) */}
@@ -188,20 +162,11 @@ export default function PendingBooks() {
                                     >
                                         Update
                                     </button>
-                                    <button
-                                        onClick={() => verifyBook(book.id)}
-                                        className="bg-green-500 text-white px-3 py-2 rounded-lg text-sm"
-                                    >
-                                        Verify
-                                    </button>
                                 </div>
                             </div>
                         ))}
                     </div>
                 </div>
-
-
-
             </div>
         </>
     )

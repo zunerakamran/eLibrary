@@ -1,5 +1,6 @@
 'use client'
 import Link from "next/link"
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { usePathname } from 'next/navigation';
 export default function Header() {
@@ -8,11 +9,15 @@ export default function Header() {
     const [isOpen = 0, setIsOpen] = useState(false);
     const [isUserMenuOpen = 0, setIsUserMenuOpen] = useState(false)
     const [user, setUser] = useState<{ id: number, username: string } | null>(null);
+    const [isAdmin, setIsAdmin] = useState(false)
     useEffect(() => {
         async function fetchUser() {
             const res = await fetch("/api/cookies")
             const data = await res.json()
             setUser(data?.id ? data : null)
+            if (data.username === "superAdmin" && data.id === 1) {
+                setIsAdmin(true)
+            }
         }
         fetchUser()
     }, [pathname])
@@ -27,7 +32,13 @@ export default function Header() {
                 {/* Desktop Screen */}
                 <div className="flex justify-between h-20 items-center">
                     <Link href="/">
-                        <img src="/images/logo.png" alt="Logo" className="w-[150px] h-[80px]" />
+                        <Image
+                            src="/images/logo.png"
+                            alt="Logo"
+                            width={150}
+                            height={80}
+                            className="w-[150px] h-[80px]"
+                        />
                     </Link>
 
                     <div className="hidden md:flex space-x-8">
@@ -102,7 +113,18 @@ export default function Header() {
                                                 My Books
                                             </Link>
                                         </li>
-
+                                        <li>
+                                            <Link href="/pending-books" className="block px-4 py-2 hover:bg-gray-100">
+                                                Pending Books
+                                            </Link>
+                                        </li>
+                                        <div className={isAdmin ? "block" : "hidden"}>
+                                            <li>
+                                                <Link href="/verified-books" className="block px-4 py-2 hover:bg-gray-100">
+                                                    Verified Books
+                                                </Link>
+                                            </li>
+                                        </div>
                                     </ul>
                                 </div>
                             </div>
@@ -179,7 +201,7 @@ export default function Header() {
                         )}
 
                         <div className={user ? "block" : "hidden"}>
-                            <Link href="/add-book" className="block text-gray-700 hover:text-[#F58220]"onClick={handleLinkClick}>
+                            <Link href="/add-book" className="block text-gray-700 hover:text-[#F58220]" onClick={handleLinkClick}>
                                 Add Book
                             </Link>
                         </div>
@@ -201,15 +223,27 @@ export default function Header() {
                             {isUserMenuOpen && (
                                 <ul className="py-2">
                                     <li className="py-2 px-10">
-                                        <Link href="/my-books" className="block text-gray-700 hover:text-[#F58220]"onClick={handleLinkClick}>
+                                        <Link href="/my-books" className="block text-gray-700 hover:text-[#F58220]" onClick={handleLinkClick}>
                                             My Books
                                         </Link>
                                     </li>
+                                    <li className="py-2 px-10">
+                                        <Link href="/pending-books" className="block text-gray-700 hover:text-[#F58220]" onClick={handleLinkClick}>
+                                            Pending Books
+                                        </Link>
+                                    </li>
+                                    <div className={isAdmin ? "block" : "hidden"}>
+                                        <li className="py-2 px-10">
+                                            <Link href="/verified-books" className="block text-gray-700 hover:text-[#F58220]" onClick={handleLinkClick}>
+                                                Verified Books
+                                            </Link>
+                                        </li>
+                                    </div>
                                 </ul>
                             )}
                         </div>
 
-                        <Link href="/login" className="block text-gray-700 hover:text-[#F58220]"onClick={handleLinkClick}>
+                        <Link href="/login" className="block text-gray-700 hover:text-[#F58220]" onClick={handleLinkClick}>
                             Log In
                         </Link>
                     </div>

@@ -1,5 +1,6 @@
 'use client'
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 import notFound from "./error";
 import { useRouter } from 'next/navigation';
 interface Book {
@@ -17,7 +18,7 @@ interface Book {
 }
 
 export default function MyBooks() {
-    const router= useRouter()
+    const router = useRouter()
     const [user, setUser] = useState<{ id: number; username: string } | null>(null);
     const [books, setBooks] = useState<Book[]>([])
     useEffect(() => {
@@ -30,31 +31,33 @@ export default function MyBooks() {
         }
         fetchUser()
     }, [])
+    async function fetchBooks() {
+        const res = await fetch('/api/books')
+        const data: Book[] = await res.json()
+        let filterBooks = data.filter(book => book.userId === user?.id)
+        filterBooks = filterBooks.filter(book => book.isVerified === true)
+        setBooks(filterBooks)
+    }
+
     useEffect(() => {
-        async function fetchBooks() {
-            const res = await fetch('/api/books')
-            const data: Book[] = await res.json()
-            const filterBooks = data.filter(book => book.userId === user?.id)
-            setBooks(filterBooks)
-        }
         fetchBooks()
     }, [user])
 
-    const viewBook= (id: number)=>{
-         router.push(`/book/${id}`)
+    const viewBook = (id: number) => {
+        router.push(`/book/${id}`)
     }
-    const deleteBook= async (id:number)=>{
-        const res= await fetch(`/api/books/${id}`,{
-            method:"DELETE"
+    const deleteBook = async (id: number) => {
+        const res = await fetch(`/api/books/${id}`, {
+            method: "DELETE"
         })
-        if(res.ok){
-            router.push('/my-books')
+        if (res.ok) {
+            fetchBooks()
         }
-        else{
-            console.log("Error")
+        else {
+            notFound("Something went wrong")
         }
     }
-    const updateBook=(id:number)=>{
+    const updateBook = (id: number) => {
         router.push(`/update/${id}`)
     }
     return (
@@ -81,9 +84,11 @@ export default function MyBooks() {
                             <div className="w-1/2 sm:w-1/2 md:w-1/3 lg:w-1/6 m-5 book-card">
                                 <div className='max-w-sm mx-auto'>
                                     <div className="bg-white shadow-lg rounded-2xl overflow-hidden hover:shadow-xl transition-shadow">
-                                        <img
-                                            src={book.image}
+                                        <Image
+                                            src={book.image.startsWith("/") ? book.image : `/${book.image}`}
                                             alt="Book Cover"
+                                            width={300}        
+                                            height={400}      
                                             className="books-images"
                                         />
                                         <div className='p-4'>
@@ -94,10 +99,10 @@ export default function MyBooks() {
                                             <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors my-5" onClick={() => viewBook(book.id)}>
                                                 View
                                             </button>
-                                            <button className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors mx-2 my-5" onClick={()=> deleteBook(book.id)}>
+                                            <button className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors mx-2 my-5" onClick={() => deleteBook(book.id)}>
                                                 Delete
                                             </button>
-                                            <button className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors mx-2 my-5" onClick={()=> updateBook(book.id)}>
+                                            <button className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors mx-2 my-5" onClick={() => updateBook(book.id)}>
                                                 Update
                                             </button>
                                         </div>

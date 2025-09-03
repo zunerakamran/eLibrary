@@ -1,5 +1,6 @@
 'use client'
 import { useEffect, useState } from "react"
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 interface Book {
     id: number;
@@ -236,7 +237,13 @@ export default function UpdateBook({ params }: { params: { id: string } }) {
                     </div>
 
                     <div className="w-full sm:w-full md:w-1/2 lg:w-1/2">
-                        <img src="/images/update.jpg" className="add-book-image" />
+                        <Image
+                            src="/images/update.jpg"
+                            alt="Update Book"
+                            width={500}
+                            height={300}
+                            className="add-book-image"
+                        />
                     </div>
                 </div>
             </div>
