@@ -69,7 +69,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
     if (!id) {
         return NextResponse.json({ error: "Book Id is required", status: 404 })
     }
-    let token = req.cookies.get("token")?.value
+    const token = req.cookies.get("token")?.value
     if (!token) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 404 })
     }
@@ -97,7 +97,9 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
         console.log(image)
 
         const oldImagePath = path.join(process.cwd(), "public", book.image)
-        await fs.unlink(oldImagePath).catch(() => { error: "Something went wrong" })
+        await fs.unlink(oldImagePath).catch(() => {
+            console.error("Something went wrong while deleting old image");
+        });
 
         const bytes = await image.arrayBuffer()
         const buffer = Buffer.from(bytes)
@@ -109,10 +111,10 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
 
         let isVerified = false
         if (user.username === "superAdmin" && user.id === 1) {
-            isVerified= true
+            isVerified = true
         }
-        else{
-            isVerified=false
+        else {
+            isVerified = false
         }
 
         const updateBook = await prisma.book.update({

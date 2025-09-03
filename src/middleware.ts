@@ -18,7 +18,8 @@ export async function adminMiddleware(req: NextRequest) {
             return NextResponse.redirect(new URL("/", req.url))
         }
     }
-    catch (error) {
+    catch (_error) {
+
         return NextResponse.redirect(new URL("/", req.url))
     }
 }
@@ -33,7 +34,7 @@ export async function authMiddleware(req: NextRequest) {
         if (payload) {
             return NextResponse.next()
         }
-    } catch (error) {
+    } catch (_error) {
         return NextResponse.redirect(new URL("/", req.url))
     }
 }
