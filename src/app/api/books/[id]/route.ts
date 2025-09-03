@@ -14,10 +14,10 @@ interface RouterContext {
 
 export async function GET(
     req: Request,
-    { params }: { params: { id: string } }
+    context: { params: { id: string } }
 ) 
     {
-        const id = Number(params.id)
+        const id = Number(context.params.id)
         if (Number.isNaN(id)) {
             return NextResponse.json(
                 { error: "Book id must be a valid number" },
