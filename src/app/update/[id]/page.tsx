@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react"
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 interface Book {
     id: number;
     title: string;
@@ -16,14 +17,11 @@ interface Book {
     userId: number
 }
 
-interface PageProps {
-  params: {
-    id: string;
-  };
-}
 
-export default function UpdateBook({ params }: PageProps) {
-    const bookid = Number(params.id)
+export default function UpdateBook() {
+    const params = useParams<{ id: string }>();
+    const id = params.id;
+    const bookid= Number(id)
     const router = useRouter();
     const [loading, setLoader] = useState(true)
     const [user, setUser] = useState<{ id: number; username: string } | null>(null);
