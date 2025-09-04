@@ -16,7 +16,13 @@ interface Book {
     userId: number
 }
 
-export default function UpdateBook({ params }: { params: { id: string } }) {
+interface PageProps {
+  params: {
+    id: string;
+  };
+}
+
+export default function UpdateBook({ params }: PageProps) {
     const bookid = Number(params.id)
     const router = useRouter();
     const [loading, setLoader] = useState(true)
