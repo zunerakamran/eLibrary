@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 export default function Login() {
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
     const [formData, setFormData]= useState({
         username: "",
         password:"",
@@ -14,7 +15,7 @@ export default function Login() {
     };
     const handleSubmit= async(e:React.FormEvent)=>{
         e.preventDefault();
-        const res= await fetch('/api/login', {
+        const res= await fetch(`${baseUrl}/api/login`, {
             method:'POST',
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(formData)
