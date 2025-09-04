@@ -2,9 +2,10 @@ import { PrismaClient } from '@prisma/client';
 import { NextRequest } from "next/server";
 import jwt from "jsonwebtoken"
 import { NextResponse } from "next/server";
-import { error } from 'console';
 const prisma = new PrismaClient()
-export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
+type Params = Promise<{ id: string }>;
+
+export async function PATCH(req: NextRequest, { params }: { params: Params }) {
     const { id } = await params
     const token = req.cookies.get("token")?.value
     if (!token) {
