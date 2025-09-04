@@ -19,7 +19,7 @@ interface Book {
 }
 
 export default function Categories() {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL!;
     const params = useParams();
     const category = params.name as string;
     const categories = ["fiction", "children", "history", "biography", "arts", "all"];
@@ -29,7 +29,7 @@ export default function Categories() {
     useEffect(() => {
         if (!isValidCategory) return;
         const loadBooks = async () => {
-            const res = await fetch(`${baseUrl}/api/books`);
+            const res = await fetch(`${baseUrl}/api/books`, { cache: "no-store" });
             const data: Book[] = await res.json();
             if (category.toLowerCase() === "all") {
                 setBooks(data)
