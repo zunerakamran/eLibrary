@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 export default function SignUp() {
+    const baseUrl= process.env.NEXT_PUBLIC_BASE_URL || "";
     const [error, setError] = useState();
     const router= useRouter()
     const [formData, setFormData] = useState({
@@ -16,7 +17,7 @@ const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 
 const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const res = await fetch("/api/signup", {
+    const res = await fetch(`${baseUrl}/api/signup`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),

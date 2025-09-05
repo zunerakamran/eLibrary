@@ -19,6 +19,7 @@ interface Book {
 
 
 export default function UpdateBook() {
+    const baseUrl= process.env.NEXT_PUBLIC_BASE_URL || "";
     const params = useParams<{ id: string }>();
     const id = params.id;
     const bookid= Number(id)
@@ -29,7 +30,7 @@ export default function UpdateBook() {
     const [isVisible, setisVisible] = useState(false)
     useEffect(() => {
         const fetchUser = async () => {
-            const res = await fetch('/api/cookies')
+            const res = await fetch(`${baseUrl}/api/cookies`, {cache: "no-store"})
             if (!res.ok) {
                 router.push('/');
                 return;

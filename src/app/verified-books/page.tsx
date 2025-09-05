@@ -18,12 +18,13 @@ interface Book {
 }
 
 export default function PendingBooks() {
+    const baseUrl= process.env.NEXT_PUBLIC_BASE_URL || "";
     const router = useRouter()
     const [user, setUser] = useState<{ id: number; username: string } | null>(null);
     const [books, setBooks] = useState<Book[]>([])
     useEffect(() => {
         async function fetchUser() {
-            const res = await fetch('/api/cookies', { credentials: 'include' });
+            const res = await fetch(`${baseUrl}/api/cookies`, { credentials: 'include', cache: "no-store" });
             if (res.ok) {
                 const data = await res.json();
                 setUser(data);

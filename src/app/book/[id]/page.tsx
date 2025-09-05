@@ -17,12 +17,13 @@ interface Book {
     isVerified: boolean;
 }
 export default function Book() {
+    const baseUrl= process.env.NEXT_PUBLIC_BASE_URL || "";
     const params = useParams();
     const id = Number(params.id);
     const [books, setBooks] = useState<Book[]>([]);
     useEffect(() => {
         const loadBooks = async () => {
-            const res = await fetch('/api/books');
+            const res = await fetch(`${baseUrl}/api/books`,{cache:"no-store"});
             const data: Book[] = await res.json();
             const filtered = data.filter(book => book.id === id);
             setBooks(filtered);

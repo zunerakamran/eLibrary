@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 export default function Login() {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+    const baseUrl= process.env.NEXT_PUBLIC_BASE_URL || "";
     const [formData, setFormData]= useState({
         username: "",
         password:"",
