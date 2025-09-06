@@ -19,7 +19,7 @@ interface Book {
 }
 
 export default function Categories() {
-    const baseUrl= process.env.NEXT_PUBLIC_BASE_URL || "";
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "";
     const params = useParams();
     const category = params.name as string;
     const categories = ["fiction", "children", "history", "biography", "arts", "all"];
@@ -29,7 +29,7 @@ export default function Categories() {
     useEffect(() => {
         if (!isValidCategory) return;
         const loadBooks = async () => {
-            const res = await fetch(`${baseUrl}/api/books`,{cache: "no-store"});
+            const res = await fetch(`${baseUrl}/api/books`, { cache: "no-store" });
             const data: Book[] = await res.json();
             if (category.toLowerCase() === "all") {
                 setBooks(data)
@@ -40,11 +40,11 @@ export default function Categories() {
             }
         };
 
-        if (category) { 
+        if (category) {
             loadBooks();
         }
-    }, [category,isValidCategory]);
-    
+    }, [category, isValidCategory]);
+
     if (!isValidCategory) {
         return notFound("This category does not exists");
     }
@@ -52,22 +52,39 @@ export default function Categories() {
     return (
         <>
             <div className="w-full mt-3">
-                <div className={`category-${category}-image categories-hero-section`}>
-                    <div className="hero-section-container">
-                        <h1 className="hero-section-heading mt-3 text-capitalize">
-                            {category.toUpperCase()}
+                <div
+                    className={`relative category-${category}-image categories-hero-section flex items-center justify-center rounded-2xl overflow-hidden`}
+                >
+                    {/* Overlay for readability */}
+                    <div className="absolute inset-0 bg-black/50" />
+
+                    {/* Content */}
+                    <div className="relative z-10 text-center max-w-3xl px-6 py-16">
+                        <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white uppercase tracking-wide">
+                            {category}
                         </h1>
-                        <p className="hero-section-text mt-3">
-                            Discover a world of knowledge, imagination, and inspiration. Browse through our diverse range of categories—each carefully curated to fuel your curiosity and ignite your passion for reading.
+
+                        <p className="mt-4 text-gray-200 text-sm sm:text-base md:text-lg leading-relaxed">
+                            Discover a world of knowledge, imagination, and inspiration. Explore our
+                            curated {category.toLowerCase()} collection to fuel your curiosity and ignite
+                            your passion for reading.
                         </p>
-                        <Link className="gallery-clickable-content" href="#booksContainer">
-                            <button className="btn library-button mt-3">Explore Now</button>
-                        </Link>
+
+                        <div className="mt-6">
+                            <Link href="#booksContainer">
+                                <button className="px-8 py-3 rounded-full bg-[#F58220] text-white font-semibold text-lg shadow-lg hover:bg-orange-600 transition transform hover:scale-105">
+                                    Explore Now
+                                </button>
+                            </Link>
+                        </div>
                     </div>
                 </div>
 
+
                 <div className="container mx-auto mt-5 mb-5" id="booksContainer">
-                    <h1 className="library-heading text-center mb-4">Browse Our Book Categories</h1>
+                    <h1 className="text-3xl md:text-5xl font-extrabold text-gray-900 text-center mt-18 mb-12">
+                        Browser Your <span className="text-[#F58220]">Category</span>
+                    </h1>
                     {books.length === 0 && notFound("No books available with this category")}
                     <div className="flex flex-wrap justify-center">
                         {books.map(book => (
