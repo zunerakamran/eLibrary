@@ -3,6 +3,12 @@ import { Geist, Geist_Mono } from "next/font/google";
 import  Header from "./components/header"
 import Footer from "./components/footer";
 import "./globals.css";
+import { Montserrat  } from "next/font/google";
+
+const font = Montserrat ({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+});
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,7 +32,7 @@ export default function RootLayout({
 }>) {
   return (
      <html lang="en">
-       <body>
+       <body className={font.className}>
          <Header />
          <div className="w-full px-4 mx-auto">
              {children}
