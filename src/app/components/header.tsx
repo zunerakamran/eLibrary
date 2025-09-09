@@ -10,6 +10,8 @@ export default function Header() {
     const [isUserMenuOpen = 0, setIsUserMenuOpen] = useState(false)
     const [user, setUser] = useState<{ id: number, username: string } | null>(null);
     const [isAdmin, setIsAdmin] = useState(false)
+    const [isCategoryOpen, setCategoryMenu] = useState(false)
+    const [isUserOpen, setUserMenu] = useState(false)
     useEffect(() => {
         async function fetchUser() {
             const res = await fetch("/api/cookies")
@@ -45,7 +47,7 @@ export default function Header() {
                         <Link href="/" className="text-gray-700 hover:text-[#F58220] font-medium pt-2">
                             Home
                         </Link>
-                        <div className="relative group pt-2">
+                        <div className="relative pt-2" onClick={() => setCategoryMenu(!isCategoryOpen)}>
                             <Link href="#" className="text-gray-700 hover:text-[#F58220] font-medium">
                                 Categories
                                 <span
@@ -55,7 +57,7 @@ export default function Header() {
                             </Link>
 
                             {/* Dropdown */}
-                            <div className="absolute left-0 mt-2 w-48 bg-white border rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 invisible group-hover:visible z-50">
+                            <div className={isCategoryOpen ? "absolute left-0 mt-2 w-48 bg-white border rounded-lg shadow-lg transition-opacity duration-200 z-50" : "hidden"}>
                                 <ul className="py-2">
                                     <li>
                                         <Link href="/categories/fiction" className="block px-4 py-2 hover:bg-gray-100">
@@ -96,7 +98,8 @@ export default function Header() {
                             </Link>
                         </span>
                         <span className={user ? "block pt-2" : "hidden"}>
-                            <div className="relative group">
+                            <div className="relative" onClick={() => setUserMenu(!isUserOpen)}>
+
                                 <Link href="#" className="text-gray-700 hover:text-[#F58220] font-medium">
                                     {user?.username}
                                     <span
@@ -106,7 +109,7 @@ export default function Header() {
                                 </Link>
 
                                 {/* Dropdown */}
-                                <div className="absolute left-0 mt-2 w-48 bg-white border rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 invisible group-hover:visible z-50">
+                                <div className={isUserOpen ? "absolute left-0 mt-2 w-48 bg-white border rounded-lg shadow-lg transition-opacity duration-200 z-50" : "hidden"}>
                                     <ul className="py-2">
                                         <li>
                                             <Link href="/my-books" className="block px-4 py-2 hover:bg-gray-100">

@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import notFound from './error'
+import Link from 'next/link';
 interface Book {
     id: number;
     title: string;
@@ -18,7 +19,7 @@ interface Book {
 }
 
 export default function PendingBooks() {
-    const baseUrl= process.env.NEXT_PUBLIC_BASE_URL || "";
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "";
     const router = useRouter()
     const [user, setUser] = useState<{ id: number; username: string } | null>(null);
     const [books, setBooks] = useState<Book[]>([])
@@ -40,8 +41,10 @@ export default function PendingBooks() {
         setBooks(filterBooks)
     }
     useEffect(() => {
-        fetchBooks();
-    }, [user, fetchBooks])
+        if (user) {
+            fetchBooks();
+        }
+    }, [user])
 
     const viewBook = (id: number) => {
         router.push(`/book/${id}`)
@@ -66,21 +69,29 @@ export default function PendingBooks() {
         <>
             <div className="w-full mt-3">
                 <div className="verifiedbooks-container">
-                    <div className="hero-section-container">
-                        <h1 className="hero-section-heading mt-3 text-capitalize">
+                    <div className="relative z-10 text-center max-w-3xl px-6 py-16">
+                        <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-black uppercase tracking-wide">
                             Verified Books
                         </h1>
-                        <p className="hero-section-text mt-3">
-                            Discover a world of knowledge, imagination, and inspiration. Browse through our diverse range of categories—each carefully curated to fuel your curiosity and ignite your passion for reading.
+
+                        <p className="mt-4 text-gray-950 text-sm sm:text-base md:text-lg leading-relaxed">
+                            Discover a world of knowledge, imagination, and inspiration. Explore our
+                            curated collection to fuel your curiosity and ignite
+                            your passion for reading.
                         </p>
-                        <button className="library-button mt-5" >
-                            Explore Now
-                        </button>
+
+                        <div className="mt-6">
+                            <Link href="#booksContainer">
+                                <button className="px-8 py-3 rounded-full bg-[#F58220] text-black font-semibold text-lg shadow-lg hover:bg-orange-600 transition transform hover:scale-105">
+                                    Explore Now
+                                </button>
+                            </Link>
+                        </div>
                     </div>
                 </div>
                 <div className="container mx-auto mt-10 mb-10 px-4" id="booksContainer">
-                    <h1 className="text-4xl font-bold text-center text-gray-800 mb-12">
-                        Browse Our Book Categories
+                    <h1 className="text-3xl md:text-5xl font-extrabold text-gray-900 text-center mt-18 mb-12">
+                        Browser Your <span className="text-[#F58220]">Category</span>
                     </h1>
 
                     {books.length === 0 && notFound("No books available")}
@@ -94,7 +105,7 @@ export default function PendingBooks() {
                                 {/* Book Image */}
                                 <div className="relative h-60 overflow-hidden">
                                     <Image
-                                        src={book.image}
+                                        src={book.image.startsWith("/") ? book.image : `/${book.image}`}
                                         alt="Book Cover"
                                         width={400}
                                         height={600}

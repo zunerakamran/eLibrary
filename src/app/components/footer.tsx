@@ -5,7 +5,7 @@ export default function Footer() {
         <>
             {/* <!-- Footer Section --> */}
             {/* <!-- Footer Section --> */}
-            <footer className="bg-[#111] text-white py-14 rounded-2xl mt-18 mb-4">
+            <footer className="bg-[#111] text-white py-14 rounded-2xl mt-5 mb-2">
                 <div className="max-w-7xl mx-auto px-6">
                     {/* Top Section */}
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-10">
