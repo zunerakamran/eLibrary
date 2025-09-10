@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
-import notFound from "./error";
+import notFound from '../error';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 interface Book {
@@ -32,11 +32,19 @@ export default function MyBooks() {
                 const data = await res.json();
                 setUser(data);
             }
+            else{
+                const data = await res.json();
+                return notFound(data.error)
+            }
         }
         fetchUser()
     }, [])
     async function fetchBooks() {
         const res = await fetch('/api/books')
+        if(!res.ok){
+            const data= await res.json()
+            return notFound(data.error)
+        }
         const data: Book[] = await res.json()
         let filterBooks = data.filter(book => book.userId === user?.id)
         filterBooks = filterBooks.filter(book => book.isVerified === true)
@@ -60,7 +68,8 @@ export default function MyBooks() {
             fetchBooks()
         }
         else {
-            notFound("Something went wrong")
+            const data= await res.json()
+            return notFound(data.error)
         }
         setDeleteModal(false)
     }

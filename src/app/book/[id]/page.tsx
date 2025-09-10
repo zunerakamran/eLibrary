@@ -1,7 +1,8 @@
 'use client'
 import Link from "next/link";
 import Image from "next/image";
-import { useParams } from "next/navigation";
+import notFound from "@/app/error";
+import {useParams } from "next/navigation";
 import { useEffect, useState } from 'react';
 
 interface Book {
@@ -24,6 +25,10 @@ export default function Book() {
     useEffect(() => {
         const loadBooks = async () => {
             const res = await fetch(`${baseUrl}/api/books`,{cache:"no-store"});
+            if(!res.ok){
+                const data= await res.json()
+                return notFound(data.error)
+            }
             const data: Book[] = await res.json();
             const filtered = data.filter(book => book.id === id);
             setBooks(filtered);

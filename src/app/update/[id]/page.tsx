@@ -1,5 +1,6 @@
 'use client'
 import { useEffect, useRef, useState } from "react"
+import notFound from "@/app/error";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useParams } from "next/navigation";
@@ -39,6 +40,10 @@ export default function UpdateBook() {
                 router.push('/');
                 return;
             }
+            else{
+                const data= await res.json()
+                return notFound(data)
+            }
             const data = await res.json()
             setUser(data)
         }
@@ -48,6 +53,10 @@ export default function UpdateBook() {
         async function fetchBook() {
             if (!user) return
             const res = await fetch(`/api/books/${bookid}`)
+            if(!res.ok){
+                const data= await res.json()
+                return notFound(data.error)
+            }
             const { book }: { book: Book } = await res.json();
             if (user && Number(user.id) !== Number(book.userId)) {
                 router.push('/');
@@ -103,12 +112,15 @@ export default function UpdateBook() {
         form.append("publishedAt", formData.publishedAt);
         form.append("details", formData.details)
         form.append("category", formData.category)
+        setUpdateModal(false)
         const res = await fetch(`/api/books/${bookid}`, {
             method: 'PATCH',
             body: form
         })
-        const data = res.json();
-        setUpdateModal(false)
+        if(!res.ok){
+           const data = await res.json();
+           return notFound(data.error)
+        }
         route.push("/my-books")
     }
     if (loading) return <LoadingFullScreen />; // or LoadingInline / SkeletonGrid
@@ -236,6 +248,7 @@ export default function UpdateBook() {
                                         required
                                         value={formData.details}
                                         onChange={handleChange}
+                                        pattern="^[A-Za-z\s.'-]{2,50}$"
                                         title="Details must be 20-1000 characters and can include letters, numbers, and punctuation." />
                                 </div>
                             </div>

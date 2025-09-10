@@ -1,5 +1,5 @@
 'use client';
-import notFound from "../error";
+import notFound from '@/app/error';
 import { useEffect, useState } from 'react';
 import Image from "next/image";
 import { useParams } from "next/navigation";
@@ -30,6 +30,10 @@ export default function Categories() {
         if (!isValidCategory) return;
         const loadBooks = async () => {
             const res = await fetch(`${baseUrl}/api/books`, { cache: "no-store" });
+            if(!res.ok){
+                const data= await res.json()
+                return notFound(data.error)
+            }
             const data: Book[] = await res.json();
             if (category.toLowerCase() === "all") {
                 setBooks(data)

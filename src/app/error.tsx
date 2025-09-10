@@ -1,11 +1,12 @@
 'use client'
 
-import Link from "next/link"
+import { useRouter } from "next/navigation";
 
 export default function notFound(error: string) {
+    const router = useRouter()
     return (
         <>
-            <div className="flex flex-col items-center justify-center min-h-[70vh] px-6 text-center">
+            <div className="flex flex-col items-center justify-center min-h-[70vh] text-center">
                 {/* Icon */}
                 <div className="w-20 h-20 flex items-center justify-center rounded-full bg-red-100 text-red-600 mb-6">
                     <svg
@@ -25,20 +26,23 @@ export default function notFound(error: string) {
                 </div>
 
                 {/* Title */}
-                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">
-                    Oops! Something went wrong
+                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6">
+                    {error}
                 </h1>
 
-                {/* Error message */}
-                <p className="text-gray-600 max-w-lg mb-6">{error}</p>
-
-                {/* CTA */}
-                <Link
-                    href="/"
+                <button
+                    onClick={() => {
+                        if (window.history.length > 1) {
+                            router.back();   // Go back
+                            router.refresh(); // Force reload the previous page's data
+                        } else {
+                            router.push("/"); // Fallback to home
+                        }
+                    }}
                     className="px-6 py-3 rounded-lg bg-[#F58220] text-white font-medium hover:bg-orange-600 transition"
                 >
-                    Go Back Home
-                </Link>
+                    Go Back
+                </button>
             </div>
         </>
     )

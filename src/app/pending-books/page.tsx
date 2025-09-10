@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import notFound from './error';
+import notFound from '../error';
 import Link from 'next/link';
 interface Book {
     id: number;
@@ -33,11 +33,19 @@ export default function PendingBooks() {
                 const data = await res.json();
                 setUser(data);
             }
+            else {
+                const data = await res.json();
+                return notFound(data.error)
+            }
         }
         fetchUser()
     }, [])
     const fetchBooks = async () => {
         const res = await fetch('/api/books')
+        if (!res.ok) {
+            const data = await res.json();
+            return notFound(data.error)
+        }
         const data: Book[] = await res.json()
         let filterBooks;
         if (user?.username === "superAdmin" && user.id === 1) {
@@ -69,7 +77,7 @@ export default function PendingBooks() {
             await fetchBooks()
         }
         else {
-            notFound(data.error)
+            return notFound(data.error)
         }
     }
     const updateBook = (id: number) => {
@@ -84,7 +92,9 @@ export default function PendingBooks() {
         if (res.ok) {
             await fetchBooks()
         }
-        notFound(data.error)
+        else {
+            return notFound(data.error)
+        }
     }
 
     return (

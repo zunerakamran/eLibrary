@@ -1,6 +1,7 @@
 'use client'
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import notFound from "../error";
+import {useRouter } from "next/navigation";
 import React, { useRef, useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 export default function Login() {
@@ -23,6 +24,10 @@ export default function Login() {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(formData)
         })
+        if(!res.ok){
+            const data= await res.json()
+            return notFound(data.error)
+        }
         const data = await res.json()
         setLoginModal(false)
         if (data.error) {

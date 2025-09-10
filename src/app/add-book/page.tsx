@@ -1,5 +1,6 @@
 'use client'
 import { useRef, useState } from "react"
+import notFound from "../error"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
 export default function AddBook() {
@@ -40,6 +41,10 @@ export default function AddBook() {
             method: 'POST',
             body: form
         })
+        if(!res.ok){
+            const data = await res.json();
+            return notFound(data.error)
+        }
         const data = res.json();
         console.log(data)
         route.push("/my-books")
@@ -175,6 +180,7 @@ export default function AddBook() {
                                         className="library-textarea"
                                         required
                                         value={formData.details}
+                                        pattern="^[A-Za-z\s.'-]{2,50}$"
                                         onChange={handleChange}
                                         title="Details must be 20-1000 characters and can include letters, numbers, and punctuation." />
                                 </div>

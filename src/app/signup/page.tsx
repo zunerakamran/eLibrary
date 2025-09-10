@@ -1,6 +1,7 @@
 'use client';
 import { useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import notFound from "../error";
+import {useRouter } from "next/navigation";
 import { Eye, EyeOff } from "lucide-react";
 export default function SignUp() {
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "";
@@ -25,6 +26,10 @@ export default function SignUp() {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(formData),
         });
+        if(!res.ok){
+            const data= await res.json()
+            return notFound(data.error)
+        }
 
         const data = await res.json();
         setSignupModal(false)
