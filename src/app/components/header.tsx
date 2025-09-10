@@ -1,7 +1,7 @@
 'use client'
 import Link from "next/link"
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { usePathname } from 'next/navigation';
 export default function Header() {
     const pathname = usePathname();
@@ -12,6 +12,7 @@ export default function Header() {
     const [isAdmin, setIsAdmin] = useState(false)
     const [isCategoryOpen, setCategoryMenu] = useState(false)
     const [isUserOpen, setUserMenu] = useState(false)
+    const [isLogoutModalOpen, setLogoutModal] = useState(false)
     useEffect(() => {
         async function fetchUser() {
             const res = await fetch("/api/cookies")
@@ -28,6 +29,17 @@ export default function Header() {
     const handleLinkClick = () => {
         setIsMenuOpen(false); // Close menu after clicking a link
     };
+    const logOut = async () => {
+        await fetch("/api/logout", {
+            method: "POST",
+            credentials: "include",
+        });
+        setLogoutModal(false);
+
+        // Reload the page
+        window.location.reload();
+    };
+
     return (
         <nav className="bg-white border-b border-gray-200 shadow-md">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -133,9 +145,12 @@ export default function Header() {
                             </div>
                         </span>
 
-                        <Link href="/login" className="library-button">
+                        <Link href="/login" className={!user ? "library-button" : "hidden"}>
                             Log In
                         </Link>
+                        <button className={user ? "library-button" : "hidden"} onClick={() => setLogoutModal(true)}>
+                            Log Out
+                        </button>
                     </div>
 
                     <div className="md:hidden">
@@ -246,12 +261,45 @@ export default function Header() {
                             )}
                         </div>
 
-                        <Link href="/login" className="block text-gray-700 hover:text-[#F58220]" onClick={handleLinkClick}>
+                        <Link href="/login" className={!user ? "block text-gray-700 hover:text-[#F58220]" : "hidden"} onClick={handleLinkClick}>
                             Log In
                         </Link>
+                        <button className={user ? "block text-gray-700 hover:text-[#F58220]" : "hidden"} onClick={() => {
+                            setLogoutModal(true);
+                            handleLinkClick();
+                        }}
+                        >
+                            Log Out
+                        </button>
                     </div>
                 )}
             </div>
+            {isLogoutModalOpen && (
+                <div className="fixed inset-0 bg-black/20 flex items-center justify-center z-50">
+                    <div className="bg-white rounded-xl shadow-lg p-6 w-80">
+                        <h2 className="text-lg font-semibold text-gray-800 mb-4">
+                            Confirm Action
+                        </h2>
+                        <p className="text-gray-600 mb-6">
+                            Are you sure you want to logout to this account?
+                        </p>
+                        <div className="flex justify-end gap-3">
+                            <button
+                                className="px-4 py-2 rounded-lg bg-gray-300 hover:bg-gray-400 transition cursor-pointer"
+                                onClick={() => setLogoutModal(false)}
+                            >
+                                Cancel
+                            </button>
+                            <button type="submit"
+                                className="px-4 py-2 rounded-lg bg-blue-600 text-white transition cursor-pointer"
+                                onClick={logOut}
+                            >
+                                LogOut
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </nav>
     )
 }

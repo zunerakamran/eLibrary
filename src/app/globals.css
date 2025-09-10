@@ -320,7 +320,8 @@
     border-radius: 22px;
     background: #F58220;
     height: 50px;
-    color: white
+    color: white;
+    cursor: pointer;
 }
 
 .login-signup-button:hover {
