@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react"
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useParams } from "next/navigation";
+import { LoadingFullScreen } from "@/app/components/LoadingFullScreen";
 interface Book {
     id: number;
     title: string;
@@ -110,7 +111,8 @@ export default function UpdateBook() {
         setUpdateModal(false)
         route.push("/my-books")
     }
-    if (loading) return <h1>Loading...</h1>;
+    if (loading) return <LoadingFullScreen />; // or LoadingInline / SkeletonGrid
+
     return (
         <>
             <div className="container mx-auto mb-12">
