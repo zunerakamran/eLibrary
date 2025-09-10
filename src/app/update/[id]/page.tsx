@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useParams } from "next/navigation";
@@ -19,10 +19,13 @@ interface Book {
 
 
 export default function UpdateBook() {
-    const baseUrl= process.env.NEXT_PUBLIC_BASE_URL || "";
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "";
+    const route = useRouter()
+    const [isUpdateModalOpen, setUpdateModal] = useState(false)
+    const formRef = useRef<HTMLFormElement | null>(null);
     const params = useParams<{ id: string }>();
     const id = params.id;
-    const bookid= Number(id)
+    const bookid = Number(id)
     const router = useRouter();
     const [loading, setLoader] = useState(true)
     const [user, setUser] = useState<{ id: number; username: string } | null>(null);
@@ -30,7 +33,7 @@ export default function UpdateBook() {
     const [isVisible, setisVisible] = useState(false)
     useEffect(() => {
         const fetchUser = async () => {
-            const res = await fetch(`${baseUrl}/api/cookies`, {cache: "no-store"})
+            const res = await fetch(`${baseUrl}/api/cookies`, { cache: "no-store" })
             if (!res.ok) {
                 router.push('/');
                 return;
@@ -90,7 +93,6 @@ export default function UpdateBook() {
         }
     }
     const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault()
         const form = new FormData();
         form.append("image", formData.image as File);
         form.append("title", formData.title);
@@ -105,7 +107,8 @@ export default function UpdateBook() {
             body: form
         })
         const data = res.json();
-        console.log(data)
+        setUpdateModal(false)
+        route.push("/my-books")
     }
     if (loading) return <h1>Loading...</h1>;
     return (
@@ -114,8 +117,8 @@ export default function UpdateBook() {
                 <div className="flex flex-wrap -mx-2 add-book-container mt-5">
 
                     <div className="w-full sm:w-full md:w-1/2 lg:w-1/2 add-book-sub-container">
-                        <form onSubmit={handleSubmit} id="addBook">
-                            <button className="library-button mb-5" onClick={() => setisVisible(!isVisible)}>Update Book Image</button>
+                        <form ref={formRef} onSubmit={(e) => e.preventDefault()} id="addBook">
+                            <button type="button" className="library-button mb-5" onClick={() => setisVisible(!isVisible)}>Update Book Image</button>
                             <div className="flex flex-wrap justify-center">
                                 <div className={isVisible ? "block w-full" : "hidden"}>
                                     <label className="input-label">
@@ -236,7 +239,43 @@ export default function UpdateBook() {
                             </div>
 
                             <div className="col-lg-12 col-md-12 col-sm-12 col-12 mt-4">
-                                <button type="submit" className="btn library-button">UPDATE</button>
+                                <button className="btn library-button" onClick={() => {
+                                    if (formRef.current?.checkValidity()) {
+                                        // ✅ open modal only if form is valid
+                                        setUpdateModal(true);
+                                    } else {
+                                        // ❌ show browser validation if not valid
+                                        formRef.current?.reportValidity();
+                                    }
+                                }}
+                                >UPDATE</button>
+
+                                {isUpdateModalOpen && (
+                                    <div className="fixed inset-0 bg-black/20 flex items-center justify-center z-50">
+                                        <div className="bg-white rounded-xl shadow-lg p-6 w-80">
+                                            <h2 className="text-lg font-semibold text-gray-800 mb-4">
+                                                Confirm Action
+                                            </h2>
+                                            <p className="text-gray-600 mb-6">
+                                                Are you sure you want to update this item?
+                                            </p>
+                                            <div className="flex justify-end gap-3">
+                                                <button
+                                                    className="px-4 py-2 rounded-lg bg-gray-300 hover:bg-gray-400 transition cursor-pointer"
+                                                    onClick={() => setUpdateModal(false)}
+                                                >
+                                                    Cancel
+                                                </button>
+                                                <button type="submit"
+                                                    className="px-4 py-2 rounded-lg bg-green-600 text-white transition cursor-pointer"
+                                                    onClick={handleSubmit}
+                                                >
+                                                    Update
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         </form>
                     </div>

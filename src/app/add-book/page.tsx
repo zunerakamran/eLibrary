@@ -1,7 +1,11 @@
 'use client'
-import { useState } from "react"
+import { useRef, useState } from "react"
+import { useRouter } from "next/navigation"
 import Image from "next/image"
 export default function AddBook() {
+    const route = useRouter()
+    const [isAddModalOpen, setAddModal] = useState(false)
+    const formRef = useRef<HTMLFormElement | null>(null);
     const [formData, setFormData] = useState({
         image: null as File | null,
         title: "",
@@ -22,7 +26,7 @@ export default function AddBook() {
         }
     }
     const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault()
+        setAddModal(false)
         const form = new FormData();
         form.append("image", formData.image!);
         form.append("title", formData.title);
@@ -38,6 +42,7 @@ export default function AddBook() {
         })
         const data = res.json();
         console.log(data)
+        route.push("/my-books")
     }
     return (
         <>
@@ -47,14 +52,14 @@ export default function AddBook() {
                         <Image
                             src="/images/add-book.jpg"
                             alt="Add Book"
-                            width={600}   
-                            height={400}  
+                            width={600}
+                            height={400}
                             className="add-book-image"
                         />
                     </div>
 
                     <div className="w-full sm:w-full md:w-1/2 lg:w-1/2 add-book-sub-container">
-                        <form onSubmit={handleSubmit} id="addBook">
+                        <form ref={formRef} onSubmit={(e) => e.preventDefault()} id="addBook">
                             <div className="flex flex-wrap justify-center">
                                 <div className="w-full">
                                     <label className="input-label">
@@ -176,7 +181,42 @@ export default function AddBook() {
                             </div>
 
                             <div className="col-lg-12 col-md-12 col-sm-12 col-12 mt-4">
-                                <button type="submit" className="btn library-button">ADD</button>
+                                <button type="button" className="btn library-button" onClick={() => {
+                                    if (formRef.current?.checkValidity()) {
+                                        // ✅ open modal only if form is valid
+                                        setAddModal(true);
+                                    } else {
+                                        // ❌ show browser validation if not valid
+                                        formRef.current?.reportValidity();
+                                    }
+                                }}>ADD</button>
+
+                                {isAddModalOpen && (
+                                    <div className="fixed inset-0 bg-black/20 flex items-center justify-center z-50">
+                                        <div className="bg-white rounded-xl shadow-lg p-6 w-80">
+                                            <h2 className="text-lg font-semibold text-gray-800 mb-4">
+                                                Confirm Action
+                                            </h2>
+                                            <p className="text-gray-600 mb-6">
+                                                Are you sure you want to add this item?
+                                            </p>
+                                            <div className="flex justify-end gap-3">
+                                                <button
+                                                    className="px-4 py-2 rounded-lg bg-gray-300 hover:bg-gray-400 transition cursor-pointer"
+                                                    onClick={() => setAddModal(false)}
+                                                >
+                                                    Cancel
+                                                </button>
+                                                <button type="submit"
+                                                    className="px-4 py-2 rounded-lg bg-blue-600 text-white transition cursor-pointer"
+                                                    onClick={handleSubmit}
+                                                >
+                                                    Add
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         </form>
                     </div>

@@ -20,6 +20,8 @@ interface Book {
 
 export default function PendingBooks() {
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "";
+    const [bookId, setBookId] = useState<number | null>(null)
+    const [isDeleteModalOpen, setDeleteModal] = useState(false)
     const router = useRouter()
     const [user, setUser] = useState<{ id: number; username: string } | null>(null);
     const [books, setBooks] = useState<Book[]>([])
@@ -49,8 +51,8 @@ export default function PendingBooks() {
     const viewBook = (id: number) => {
         router.push(`/book/${id}`)
     }
-    const deleteBook = async (id: number) => {
-        const res = await fetch(`/api/books/${id}`, {
+    const deleteBook = async () => {
+        const res = await fetch(`/api/books/${bookId}`, {
             method: "DELETE"
         })
         const data = await res.json()
@@ -60,6 +62,8 @@ export default function PendingBooks() {
         else {
             notFound(data.error)
         }
+        setDeleteModal(false)
+
     }
     const updateBook = (id: number) => {
         router.push(`/update/${id}`)
@@ -139,7 +143,7 @@ export default function PendingBooks() {
                                         🔍
                                     </button>
                                     <button
-                                        onClick={() => deleteBook(book.id)}
+                                        onClick={() => { setBookId(book.id); setDeleteModal(true) }}
                                         className="bg-red-500 hover:bg-red-600 text-white p-3 rounded-full shadow-lg transition transform hover:scale-110"
                                         title="Delete"
                                     >
@@ -163,7 +167,7 @@ export default function PendingBooks() {
                                         View
                                     </button>
                                     <button
-                                        onClick={() => deleteBook(book.id)}
+                                        onClick={() => { setBookId(book.id); setDeleteModal(true) }}
                                         className="bg-red-500 text-white px-3 py-2 rounded-lg text-sm"
                                     >
                                         Delete
@@ -178,6 +182,33 @@ export default function PendingBooks() {
                             </div>
                         ))}
                     </div>
+
+                    {isDeleteModalOpen && (
+                        <div className="fixed inset-0 bg-black/20 flex items-center justify-center z-50">
+                            <div className="bg-white rounded-xl shadow-lg p-6 w-80">
+                                <h2 className="text-lg font-semibold text-gray-800 mb-4">
+                                    Confirm Action
+                                </h2>
+                                <p className="text-gray-600 mb-6">
+                                    Are you sure you want to delete this item?
+                                </p>
+                                <div className="flex justify-end gap-3">
+                                    <button
+                                        className="px-4 py-2 rounded-lg bg-gray-300 hover:bg-gray-400 transition cursor-pointer"
+                                        onClick={() => setDeleteModal(false)}
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button type="button"
+                                        className="px-4 py-2 rounded-lg bg-red-600 text-white transition cursor-pointer"
+                                        onClick={() => deleteBook()}
+                                    >
+                                        Delete
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
         </>

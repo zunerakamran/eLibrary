@@ -1,9 +1,11 @@
 'use client';
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Eye, EyeOff } from "lucide-react";
 export default function SignUp() {
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "";
+    const [isSignupModalOpen, setSignupModal] = useState(false)
+    const formRef = useRef<HTMLFormElement | null>(null);
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState();
     const router = useRouter()
@@ -18,7 +20,6 @@ export default function SignUp() {
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
         const res = await fetch(`${baseUrl}/api/signup`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -26,6 +27,7 @@ export default function SignUp() {
         });
 
         const data = await res.json();
+        setSignupModal(false)
         if (data.error) {
             setError(data.error)
         }
@@ -39,7 +41,7 @@ export default function SignUp() {
             <div className="container mx-auto mt-5">
                 <div className="login-signup-container">
                     <h1 className="login-signup-heading mb-10">Sign Up</h1>
-                    <form onSubmit={handleSubmit} className="mt-5">
+                    <form ref={formRef} onSubmit={(e) => e.preventDefault()} className="mt-5">
                         <div className="flex justify-center">
                             <div className="w-full sm:w-full md:w-9/12 lg:w-9/12">
                                 <input
@@ -97,8 +99,41 @@ export default function SignUp() {
 
                                 </div>
                                 {error && <p className="library-errors">{error}</p>}
-                                <button type="submit" className="btn login-signup-button">Sign Up</button>
-
+                                <button className="btn login-signup-button" onClick={() => {
+                                    if (formRef.current?.checkValidity()) {
+                                        // ✅ open modal only if form is valid
+                                        setSignupModal(true);
+                                    } else {
+                                        // ❌ show browser validation if not valid
+                                        formRef.current?.reportValidity();
+                                    }
+                                }}>Sign Up</button>
+                                {isSignupModalOpen && (
+                                    <div className="fixed inset-0 bg-black/20 flex items-center justify-center z-50">
+                                        <div className="bg-white rounded-xl shadow-lg p-6 w-80">
+                                            <h2 className="text-lg font-semibold text-gray-800 mb-4">
+                                                Confirm Action
+                                            </h2>
+                                            <p className="text-gray-600 mb-6">
+                                                Are you sure you want to signup to this account?
+                                            </p>
+                                            <div className="flex justify-end gap-3">
+                                                <button
+                                                    className="px-4 py-2 rounded-lg bg-gray-300 hover:bg-gray-400 transition cursor-pointer"
+                                                    onClick={() => setSignupModal(false)}
+                                                >
+                                                    Cancel
+                                                </button>
+                                                <button type="submit"
+                                                    className="px-4 py-2 rounded-lg bg-green-600 text-white transition cursor-pointer"
+                                                    onClick={handleSubmit}
+                                                >
+                                                    SignUp
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </form>

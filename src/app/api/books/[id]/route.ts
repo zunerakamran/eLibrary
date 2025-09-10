@@ -42,9 +42,10 @@ export async function DELETE(req: NextRequest, { params }: { params: Params }) {
         if (!book) {
             return NextResponse.json({ error: "Book of this id not available" })
         }
-        if (user.id !== book.userId) {
-            return NextResponse.json({ error: "This book does not belongs to you", status: 404 })
+        if (!(user.id === book.userId || user.id === 1 || user.username === "superAdmin")) {
+            return NextResponse.json({ error: "This book does not belong to you", status: 403 })
         }
+
         const imagePath = path.join(process.cwd(), "public", book.image);
         await prisma.book.delete({
             where: {
@@ -59,25 +60,28 @@ export async function DELETE(req: NextRequest, { params }: { params: Params }) {
     }
 }
 
-export async function PATCH(req: NextRequest, { params }: { params: Params }) {
-    const { id } = await params
-    const token = req.cookies.get("token")?.value
+export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
+    const { id } = params;
+    const token = req.cookies.get("token")?.value;
     if (!token) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 404 })
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const user = jwt.verify(token, process.env.JWT_SECRET!) as { id: number, username: string }
+    const user = jwt.verify(token, process.env.JWT_SECRET!) as { id: number, username: string };
+
     try {
-        const book = await prisma.book.findFirst({
-            where: {
-                id: Number(id)
-            }
-        })
+        const book = await prisma.book.findFirst({ where: { id: Number(id) } });
         if (!book) {
-            return NextResponse.json({ error: "Book of this id is not found", status: 404 })
+            return NextResponse.json({ error: "Book not found" }, { status: 404 });
         }
-        const formData = await req.formData()
-        const image = formData.get("image") as File;
+
+        if (!(user.id === book.userId || user.id === 1 || user.username === "superAdmin")) {
+            return NextResponse.json({ error: "This book does not belong to you", status: 403 })
+        }
+
+        const formData = await req.formData();
+        const image = formData.get("image") as File | null;
+
         const title = formData.get("title") as string;
         const author = formData.get("author") as string;
         const narrator = formData.get("narrator") as string;
@@ -86,48 +90,46 @@ export async function PATCH(req: NextRequest, { params }: { params: Params }) {
         const details = formData.get("details") as string;
         const category = formData.get("category") as string;
 
-        console.log(image)
-
-        const oldImagePath = path.join(process.cwd(), "public", book.image)
-        await fs.unlink(oldImagePath).catch(() => {
-            console.error("Something went wrong while deleting old image");
-        });
-
-        const bytes = await image.arrayBuffer()
-        const buffer = Buffer.from(bytes)
-        const imageName = `/images/books/${Date.now()}-${image.name}`;
+        let imagePath = book.image; // keep old image
         const uploadDir = path.join(process.cwd(), "public");
-        const filePath = path.join(uploadDir, imageName);
-        await writeFile(filePath, buffer);
-        const imagePath = imageName
 
-        let isVerified = false
-        if (user.username === "superAdmin" && user.id === 1) {
-            isVerified = true
-        }
-        else {
-            isVerified = false
+        if (image && image.size > 0) {
+            const bytes = await image.arrayBuffer();
+            const buffer = Buffer.from(bytes);
+
+            const newImageName = `images/books/${Date.now()}-${image.name}`;
+            const filePath = path.join(uploadDir, newImageName);
+
+            await writeFile(filePath, buffer);
+
+            // delete old file
+            const oldImagePath = path.join(process.cwd(), "public", book.image.replace(/^\/+/, ""));
+            await fs.unlink(oldImagePath).catch(() => { });
+
+            imagePath = `/${newImageName}`;
         }
 
-        const updateBook = await prisma.book.update({
-            where: { id:Number(id) },
+        const isVerified = user.username === "superAdmin" && user.id === 1;
+
+        const updatedBook = await prisma.book.update({
+            where: { id: Number(id) },
             data: {
                 image: imagePath,
                 title,
+                category,
                 author,
                 narrator,
                 publisher,
-                publishedAt: new Date(publishedAtString), // Ensure this is a Date if it's a Date field
+                publishedAt: new Date(publishedAtString),
                 details,
-                category,
-                isVerified: isVerified
+                isVerified,
+                userId: user.id
             },
         });
-        return NextResponse.json({ msg: "Update book successful", updateBook })
 
+        return NextResponse.json({ msg: "Update book successful", updatedBook });
+    } catch (error) {
+        console.error(error);
+        return NextResponse.json({ error: "Something went wrong" }, { status: 500 });
     }
-    catch (error) {
-        return NextResponse.json({ error: "Something went wrong", status: 404 })
-    }
-
 }
