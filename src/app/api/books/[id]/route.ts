@@ -60,8 +60,8 @@ export async function DELETE(req: NextRequest, { params }: { params: Params }) {
     }
 }
 
-export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
-    const { id } = params;
+export async function PATCH(req: NextRequest, { params }: { params: Params }) {
+    const { id } =  await params
     const token = req.cookies.get("token")?.value;
     if (!token) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
