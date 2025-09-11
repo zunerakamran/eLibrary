@@ -258,6 +258,7 @@
             rgba(157, 175, 181, 0.55) 39.44%,
             rgba(255, 255, 255, 0.00) 100%),
         url('/images/category1.jpg');
+    background-position: center;
 }
 
 .category-children-image {
@@ -265,6 +266,7 @@
             rgba(157, 175, 181, 0.55) 39.44%,
             rgba(255, 255, 255, 0.00) 100%),
         url('/images/category2.jpg');
+    background-position: center;
 }
 
 .category-history-image {
@@ -272,6 +274,7 @@
             rgba(157, 175, 181, 0.55) 39.44%,
             rgba(255, 255, 255, 0.00) 100%),
         url('/images/category3.jpg');
+    background-position: center;
 }
 
 .category-biography-image {
@@ -281,6 +284,7 @@
         url('/images/category4.jpg');
     background-repeat: no-repeat;
     background-size: cover;
+    background-position: center;
 }
 
 .category-arts-image {
@@ -288,6 +292,7 @@
             rgba(157, 175, 181, 0.55) 39.44%,
             rgba(255, 255, 255, 0.00) 100%),
         url('/images/category5.jpg');
+    background-position: center;
     
 }
 
@@ -296,6 +301,7 @@
             rgba(157, 175, 181, 0.55) 39.44%,
             rgba(255, 255, 255, 0.00) 100%),
         url('/images/category6.jpg');
+    background-position: center;
 }
 
 /* Log in and sign up styling */
