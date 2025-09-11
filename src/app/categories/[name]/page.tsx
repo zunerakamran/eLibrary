@@ -94,7 +94,7 @@ export default function Categories() {
                     {books.length === 0 && NotFound("No books available with this category")}
                     <div className="flex flex-wrap justify-center">
                         {books.map(book => (
-                            <div key={book.id} className="w-1/2 sm:w-1/2 md:w-1/3 lg:w-1/6 m-5 book-card">
+                            <div key={book.id} className="w-2/2 sm:w-2/2 md:w-1/3 lg:w-1/6 m-5 book-card">
                                 <Link href={`/book/${book.id}`} className="gallery-clickable-content">
                                     <Image
                                         src={book.image.startsWith("/") ? book.image : `/${book.image}`} // ensure it starts with /
