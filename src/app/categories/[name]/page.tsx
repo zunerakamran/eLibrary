@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import Link from "next/link";
+import { LoadingFullScreen } from '@/app/components/LoadingFullScreen';
 
 interface Book {
     id: number;
@@ -20,6 +21,7 @@ interface Book {
 
 export default function Categories() {
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "";
+    const [loading, setLoader] = useState(true)
     const params = useParams();
     const category = params.name as string;
     const categories = ["fiction", "children", "history", "biography", "arts", "all"];
@@ -38,11 +40,13 @@ export default function Categories() {
             if (category.toLowerCase() === "all") {
                 const filtered= data.filter(book=> book.isVerified === true)
                 setBooks(filtered)
+                setLoader(false)
             }
             else {
                 let filtered = data.filter(book => book.category.toLowerCase() === category.toLowerCase());
                 filtered= filtered.filter(book=> book.isVerified === true)
                 setBooks(filtered);
+                setLoader(false)
             }
         };
 
@@ -54,6 +58,8 @@ export default function Categories() {
     if (!isValidCategory) {
         return NotFound("This category does not exists");
     }
+
+    if (loading) return <LoadingFullScreen />; // or LoadingInline / SkeletonGrid
 
     return (
         <>

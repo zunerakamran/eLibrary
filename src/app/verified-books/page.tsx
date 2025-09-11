@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import NotFound from '../error';
 import Link from 'next/link';
+import { LoadingFullScreen } from '../components/LoadingFullScreen';
 interface Book {
     id: number;
     title: string;
@@ -20,6 +21,7 @@ interface Book {
 
 export default function PendingBooks() {
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "";
+    const [loading, setLoader] = useState(true)
     const [bookId, setBookId] = useState<number | null>(null)
     const [isDeleteModalOpen, setDeleteModal] = useState(false)
     const router = useRouter()
@@ -49,6 +51,7 @@ export default function PendingBooks() {
         let filterBooks = data.filter(book => book.isVerified === true)
         filterBooks = filterBooks.filter(book => book.userId !== user?.id)
         setBooks(filterBooks)
+        setLoader(false)
     }
     useEffect(() => {
         if (user) {
@@ -76,6 +79,8 @@ export default function PendingBooks() {
     const updateBook = (id: number) => {
         router.push(`/update/${id}`)
     }
+
+    if (loading) return <LoadingFullScreen />; // or LoadingInline / SkeletonGrid
 
     return (
         <>

@@ -40,10 +40,6 @@ export default function UpdateBook() {
                 router.push('/');
                 return;
             }
-            else{
-                const data= await res.json()
-                return NotFound(data)
-            }
             const data = await res.json()
             setUser(data)
         }

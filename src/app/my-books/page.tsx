@@ -4,6 +4,7 @@ import Image from 'next/image';
 import NotFound from '../error';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { LoadingFullScreen } from '../components/LoadingFullScreen';
 interface Book {
     id: number;
     title: string;
@@ -20,6 +21,7 @@ interface Book {
 
 export default function MyBooks() {
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "";
+    const [loading, setLoader] = useState(true)
     const [bookId, setBookId] = useState<number | null>(null)
     const [isDeleteModalOpen, setDeleteModal] = useState(false)
     const router = useRouter()
@@ -49,6 +51,7 @@ export default function MyBooks() {
         let filterBooks = data.filter(book => book.userId === user?.id)
         filterBooks = filterBooks.filter(book => book.isVerified === true)
         setBooks(filterBooks)
+        setLoader(false)
     }
 
     useEffect(() => {
@@ -76,6 +79,7 @@ export default function MyBooks() {
     const updateBook = (id: number) => {
         router.push(`/update/${id}`)
     }
+    if (loading) return <LoadingFullScreen />; // or LoadingInline / SkeletonGrid
     return (
         <>
             <div className="w-full mt-3">

@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import NotFound from '../error';
 import Link from 'next/link';
+import { LoadingFullScreen } from '../components/LoadingFullScreen';
 interface Book {
     id: number;
     title: string;
@@ -26,6 +27,7 @@ export default function PendingBooks() {
     const [user, setUser] = useState<{ id: number; username: string } | null>(null);
     const [books, setBooks] = useState<Book[]>([])
     const [verifyBtn, setVerifyBtn] = useState(false)
+    const [loading, setLoader] = useState(true)
     useEffect(() => {
         async function fetchUser() {
             const res = await fetch(`${baseUrl}/api/cookies`, { credentials: 'include', cache: "no-store" });
@@ -58,6 +60,7 @@ export default function PendingBooks() {
             setVerifyBtn(false)
         }
         setBooks(filterBooks)
+        setLoader(false)
     }
     useEffect(() => {
         if (user) {
@@ -96,6 +99,7 @@ export default function PendingBooks() {
             return NotFound(data.error)
         }
     }
+    if (loading) return <LoadingFullScreen />; // or LoadingInline / SkeletonGrid
 
     return (
         <>
