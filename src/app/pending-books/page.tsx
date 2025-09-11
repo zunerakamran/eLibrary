@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import notFound from '../error';
+import NotFound from '../error';
 import Link from 'next/link';
 interface Book {
     id: number;
@@ -35,7 +35,7 @@ export default function PendingBooks() {
             }
             else {
                 const data = await res.json();
-                return notFound(data.error)
+                return NotFound(data.error)
             }
         }
         fetchUser()
@@ -44,7 +44,7 @@ export default function PendingBooks() {
         const res = await fetch('/api/books')
         if (!res.ok) {
             const data = await res.json();
-            return notFound(data.error)
+            return NotFound(data.error)
         }
         const data: Book[] = await res.json()
         let filterBooks;
@@ -77,7 +77,7 @@ export default function PendingBooks() {
             await fetchBooks()
         }
         else {
-            return notFound(data.error)
+            return NotFound(data.error)
         }
     }
     const updateBook = (id: number) => {
@@ -93,7 +93,7 @@ export default function PendingBooks() {
             await fetchBooks()
         }
         else {
-            return notFound(data.error)
+            return NotFound(data.error)
         }
     }
 
@@ -126,7 +126,7 @@ export default function PendingBooks() {
                         Browser Your <span className="text-[#F58220]">Category</span>
                     </h1>
 
-                    {books.length === 0 && notFound("No books available")}
+                    {books.length === 0 && NotFound("No books available")}
 
                     <div className="grid gap-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
                         {books.map((book) => (

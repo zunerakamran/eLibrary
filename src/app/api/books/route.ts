@@ -7,7 +7,9 @@ import path from 'path';
 const prisma = new PrismaClient();
 
 export async function GET(req: NextRequest) {
-    const books = await prisma.book.findMany();
+    const books = await prisma.book.findMany({
+        include: { user: true },
+    });
     return NextResponse.json(books);
 }
 

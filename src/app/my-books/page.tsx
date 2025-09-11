@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
-import notFound from '../error';
+import NotFound from '../error';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 interface Book {
@@ -34,7 +34,7 @@ export default function MyBooks() {
             }
             else{
                 const data = await res.json();
-                return notFound(data.error)
+                return NotFound(data.error)
             }
         }
         fetchUser()
@@ -43,7 +43,7 @@ export default function MyBooks() {
         const res = await fetch('/api/books')
         if(!res.ok){
             const data= await res.json()
-            return notFound(data.error)
+            return NotFound(data.error)
         }
         const data: Book[] = await res.json()
         let filterBooks = data.filter(book => book.userId === user?.id)
@@ -69,7 +69,7 @@ export default function MyBooks() {
         }
         else {
             const data= await res.json()
-            return notFound(data.error)
+            return NotFound(data.error)
         }
         setDeleteModal(false)
     }
@@ -106,7 +106,7 @@ export default function MyBooks() {
                 <h1 className="text-3xl md:text-5xl font-extrabold text-gray-900 text-center mt-18 mb-12">
                     Browser Your <span className="text-[#F58220]">Category</span>
                 </h1>
-                {books.length === 0 && notFound("No books available")}
+                {books.length === 0 && NotFound("No books available")}
                 <div className="grid gap-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
                     {books.map((book) => (
                         <div

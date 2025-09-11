@@ -1,6 +1,6 @@
 'use client';
 import { useRef, useState } from "react";
-import notFound from "../error";
+import NotFound from "../error";
 import {useRouter } from "next/navigation";
 import { Eye, EyeOff } from "lucide-react";
 export default function SignUp() {
@@ -28,7 +28,7 @@ export default function SignUp() {
         });
         if(!res.ok){
             const data= await res.json()
-            return notFound(data.error)
+            return NotFound(data.error)
         }
 
         const data = await res.json();

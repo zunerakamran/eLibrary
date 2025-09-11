@@ -61,7 +61,7 @@ export async function DELETE(req: NextRequest, { params }: { params: Params }) {
 }
 
 export async function PATCH(req: NextRequest, { params }: { params: Params }) {
-    const { id } =  await params
+    const { id } = await params
     const token = req.cookies.get("token")?.value;
     if (!token) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -89,6 +89,40 @@ export async function PATCH(req: NextRequest, { params }: { params: Params }) {
         const publishedAtString = formData.get("publishedAt") as string;
         const details = formData.get("details") as string;
         const category = formData.get("category") as string;
+
+        //validation of form
+        if (!title || !author || !narrator || !publisher || !publishedAtString || !details || !category) {
+            return NextResponse.json({ error: "All fields are required", status: 404 })
+        }
+
+        if (!/^[A-Za-z\s]{2,40}$/.test(title)) {
+            return NextResponse.json({ error: "Title should contain letters (2-40)", status: 404 })
+        }
+
+        if (!/^[A-Za-z\s]{2,40}$/.test(author)) {
+            return NextResponse.json({ error: "Author should contain letters (2-40)", status: 404 })
+        }
+
+        if (!/^[A-Za-z\s]{2,40}$/.test(narrator)) {
+            return NextResponse.json({ error: "Narrator should contain letters (2-40)", status: 404 })
+        }
+
+        if (!/^[A-Za-z\s]{2,40}$/.test(publisher)) {
+            return NextResponse.json({ error: "Publisher should contain letters (2-40)", status: 404 })
+        }
+
+        if (!/^[A-Za-z\s]{2,40}$/.test(details)) {
+            return NextResponse.json({ error: "Details should contain letters (2-40)", status: 404 })
+        }
+
+        const publishedAt = new Date(publishedAtString)
+        if (isNaN(publishedAt.getTime()) || publishedAt > new Date() || publishedAt.getFullYear() < 1500) {
+            return NextResponse.json({ error: "Invalid Date", status: 404 })
+        }
+        const categories = ["fiction", "children", "biography", "arts", "history"]
+        if (!categories.includes(category.toLowerCase())) {
+            return NextResponse.json({ error: "Invalid category", status: 404 })
+        }
 
         let imagePath = book.image; // keep old image
         const uploadDir = path.join(process.cwd(), "public");

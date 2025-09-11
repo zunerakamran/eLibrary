@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useRef, useState } from "react"
-import notFound from "@/app/error";
+import NotFound from "@/app/error";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useParams } from "next/navigation";
@@ -42,7 +42,7 @@ export default function UpdateBook() {
             }
             else{
                 const data= await res.json()
-                return notFound(data)
+                return NotFound(data)
             }
             const data = await res.json()
             setUser(data)
@@ -55,7 +55,7 @@ export default function UpdateBook() {
             const res = await fetch(`/api/books/${bookid}`)
             if(!res.ok){
                 const data= await res.json()
-                return notFound(data.error)
+                return NotFound(data.error)
             }
             const { book }: { book: Book } = await res.json();
             if (user && Number(user.id) !== Number(book.userId)) {
@@ -119,7 +119,7 @@ export default function UpdateBook() {
         })
         if(!res.ok){
            const data = await res.json();
-           return notFound(data.error)
+           return NotFound(data.error)
         }
         route.push("/my-books")
     }

@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 
-export default function notFound(error: string) {
+export default function NotFound(error: string) {
     const router = useRouter()
     return (
         <>

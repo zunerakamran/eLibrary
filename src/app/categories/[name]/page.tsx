@@ -1,5 +1,5 @@
 'use client';
-import notFound from '@/app/error';
+import NotFound from '@/app/error';
 import { useEffect, useState } from 'react';
 import Image from "next/image";
 import { useParams } from "next/navigation";
@@ -32,14 +32,16 @@ export default function Categories() {
             const res = await fetch(`${baseUrl}/api/books`, { cache: "no-store" });
             if(!res.ok){
                 const data= await res.json()
-                return notFound(data.error)
+                return NotFound(data.error)
             }
             const data: Book[] = await res.json();
             if (category.toLowerCase() === "all") {
-                setBooks(data)
+                const filtered= data.filter(book=> book.isVerified === true)
+                setBooks(filtered)
             }
             else {
-                const filtered = data.filter(book => book.category.toLowerCase() === category.toLowerCase());
+                let filtered = data.filter(book => book.category.toLowerCase() === category.toLowerCase());
+                filtered= filtered.filter(book=> book.isVerified === true)
                 setBooks(filtered);
             }
         };
@@ -50,7 +52,7 @@ export default function Categories() {
     }, [category, isValidCategory]);
 
     if (!isValidCategory) {
-        return notFound("This category does not exists");
+        return NotFound("This category does not exists");
     }
 
     return (
@@ -89,7 +91,7 @@ export default function Categories() {
                     <h1 className="text-3xl md:text-5xl font-extrabold text-gray-900 text-center mt-18 mb-12">
                         Browser Your <span className="text-[#F58220]">Category</span>
                     </h1>
-                    {books.length === 0 && notFound("No books available with this category")}
+                    {books.length === 0 && NotFound("No books available with this category")}
                     <div className="flex flex-wrap justify-center">
                         {books.map(book => (
                             <div key={book.id} className="w-1/2 sm:w-1/2 md:w-1/3 lg:w-1/6 m-5 book-card">
